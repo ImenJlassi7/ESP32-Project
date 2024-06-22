@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8>">
+  <meta http-equiv='refrech' content='1'/>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.2/css/all.css' integrity='sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr' crossorigin='anonymous'>
+  
+  <title>ESP32 DHT Server</title>
+  <style>
+    html { font-family: Arial; display: inline-block; margin: 0px auto; text-align: center;}
+    h2 { font-size: 3.0rem; }
+    p { font-size: 3.0rem; }
+    .units { font-size: 1.2rem; }
+    .dht-labels{ font-size: 1.5rem; vertical-align:middle; padding-bottom: 15px;}
+    
+  </style>
+</head>
+<body>
+  <h2> DHT 11 AND ULTRASON</h2>
+  <p>
+    <i class='fas fa-thermometer-half' style='color:#ca3517;'></i>
+    <span class='dht-labels'>Temperature</span>
+    <span>{{temperature}}</span>
+    <sup class='units'>&deg;C</sup>
+  </p>
+  <p>
+    <i class='fas fa-tint' style='color:#00add6;'></i>
+    <span class='dht-labels'>Humidity</span>
+    <span>{{humidity}}</span>
+    <sup class='units'>&percnt;</sup>
+  </p>
+
+  <p>
+    <i class='fas fa-arrows-alt-h' style='color:green;'></i>
+    <span class='dht-labels'>Distance</span>
+    <span>{{distance}}</span>
+    <label class='units'>Cm</label>
+  </p>
+
+  <form id="thresholdForm" onsubmit="submitForm(event);">
+    <label for="valeur" class='units'>Introduire la température</label>
+    <input type="text" id="valeur" name="threshold" class="valeur" style="padding: 10px; border: 2px solid #007bff; border-radius: 5px; font-size: 16px; color: #333; background-color: #f8f9fa;">
+    <input type="submit" value="Submit" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+
+  </form>
+  <br>
+  <br>
+  <form id="distanceForm" onsubmit="submiiitForm(event);">
+
+
+    <label for="valeur" class='units'>Introduire la valeur de la distance</label>
+    <input type="text" id="val" name="distance" class="val" style="padding: 10px; border: 2px solid #007bff; border-radius: 5px; font-size: 16px; color: #333; background-color: #f8f9fa;">
+    <input type="submit" value="Submit" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+
+  </form>
+  <script>
+    function submitForm(event) {
+   alert(thresholdValue)
+      event.preventDefault(); // Empêche le comportement par défaut de soumettre le formulaire et de recharger la page
+
+      var thresholdValue = document.getElementById("valeur").value;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/threshold");
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          alert(xhr.responseText); // Afficher une alerte pour confirmer la mise à jour de la variable
+        }
+      };
+      xhr.send("threshold=" + encodeURIComponent(thresholdValue));
+    }
+  </script>
+   <script>
+    function submiiitForm(event) {
+      alert(distanceValue)
+      event.preventDefault(); // Empêche le comportement par défaut de soumettre le formulaire et de recharger la page
+
+      var distanceValue  = document.getElementById("val").value;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/distance");
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          alert(xhr.responseText); // Afficher une alerte pour confirmer la mise à jour de la variable
+        }
+      };
+      xhr.send("distance=" + encodeURIComponent(distanceValue ));
+    }
+  </script>
+</body>
+</html>
